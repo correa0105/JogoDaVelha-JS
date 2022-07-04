@@ -7,84 +7,84 @@ restartButton.addEventListener("click", startGame);
 
 let isCircleTurn;
 
-const winningCombination = [                                              //COMBINAÇÕES POSSIVEIS
+const winningCombination = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8],
     [0, 3, 6], [1, 4, 7], [2, 5, 8],
     [0, 4, 8], [2, 4, 6]
 ]
 
-function startGame () {                                                   //FUNÇÃO QUE INICIA O JOGO
-    isCircleTurn = false;                                                 //CIRCLE RECEBE FALSE POIS O INICIO DO JOGO A VEZ É DO X
+function startGame () {
+    isCircleTurn = false;
 
-    for (const cell of cellElements) {                                    //COLOCA EM CADA CELLELEMENTS UMA CONSTANC CELL
+    for (const cell of cellElements) {
 
-        cell.classList.remove("circle");                                  //REMOVE A CLASSE CIRCLE DE TODOS CELULAS
-        cell.classList.remove("x");                                       //REMOVE A CLASSE X DE TODOS CELULAS
-        cell.removeEventListener("click", handleClick);                   //REMOVE O EVENTO DE CLICK DE TODOS CELULAS
+        cell.classList.remove("circle");
+        cell.classList.remove("x");
+        cell.removeEventListener("click", handleClick);
 
-        cell.addEventListener("click", handleClick, {once: true});        //ADICIONA EVENTO DE CLICK EM TODOS CELULAS
+        cell.addEventListener("click", handleClick, {once: true});
     }
 
-    board.classList.add("x");                                             //ADD A CLASSE X NA BOARD POIS A VEZ É DO X
-    board.classList.remove("circle");                                     //REMOVE A CLASSE CIRCLE DA BOARD POIS QUANDO REINICIA O JOGO NAO FICAR 2 CLASSES NA BOARD
-    winningMessage.style.display = "none";                                //SEMPRE QUE O JOGO COMEÇA O DISPLAY DE FINAL DE JOGO É NONE
+    board.classList.add("x");
+    board.classList.remove("circle");
+    winningMessage.style.display = "none";
 }
 
-function endGame (isDraw) {                                               //RECEBE O ARGUMENTO EMPATE
-    if (isDraw) {                                                         //SE EMPATE FOR VERDADEIRO
+function endGame (isDraw) {
+    if (isDraw) {
         winningMessageText.innerText = "Empate!";
-    } else {                                                              //SE AMPATE FOR FALSO
+    } else {
         winningMessageText.innerText = isCircleTurn ? "Circulo Venceu!" : "X Venceu!"; 
     }
 
     winningMessage.style.display = "flex";
 }
 
-function handleClick (event) {                                            //FUNÇÃO QUE DETERMINA AONDE VAI SER ADICIONADO A CLASSE
-    const cell = event.target;                                            //CAPTURA O CLICK
-    const classToAdd = isCircleTurn ? "circle" : "x";                     //SE O CIRCULO FOR VERDADEIRO ADICIONA CIRCLE RECEBE CIRCLE SE FOR FALSE RECEBE X
+function handleClick (event) {
+    const cell = event.target;
+    const classToAdd = isCircleTurn ? "circle" : "x";
 
-    placeMark(cell, classToAdd);                                          //CHAMA A FUNÇÃO COM O TARGET DO CLICK E A CLASSE A SER ADICIONADA
+    placeMark(cell, classToAdd);
 
-    const isWin = checkForWin(classToAdd);                                //IS WIN RECEBE O TESTE DE VERDADEIRO OU FALSO COM O PLAYER ATUAL
-    const isDraw = checkForDraw();                                        //IS DRAW RECEBE A FUNÇÃO PARA TESTE DE EMPATE
+    const isWin = checkForWin(classToAdd);
+    const isDraw = checkForDraw();
 
-    if (isWin) {                                                          //SE IS WIN FOR VERDADEIRO
-        endGame(false);                                                   //ENDGAME RECEBE FALSE
-    } else if (isDraw) {                                                  //SE IS DRAW FOR VERDADEIRO
-        endGame(true);                                                    //ENDGAME RECEBE TRUE
-    } else {                                                              //SE NÃO
-        swapTurns();                                                      //APENAS TROCA O TURNO
+    if (isWin) {
+        endGame(false);
+    } else if (isDraw) {
+        endGame(true);
+    } else {
+        swapTurns();
     }
 }
 
-function placeMark(cell, classToAdd) {                                    //FUNÇÃO QUE ADICIONA A CLASSE CELULA
+function placeMark(cell, classToAdd) {
     cell.classList.add(classToAdd);
 }
 
-function swapTurns () {                                                   //FUNÇÃO QUE TROCA O TURNO DO JOGADOR
-    isCircleTurn = !isCircleTurn;                                         //IS CIRCLE RECEBE O CONTRARIO DO BOOLEAN ATUAL
+function swapTurns () {
+    isCircleTurn = !isCircleTurn;
 
-    board.classList.remove("circle");                                     //REMOVE A CLASSE CIRCLE DA BOARD
-    board.classList.remove("x");                                          //REMOVE A CLASSE X DA BOARD
+    board.classList.remove("circle");
+    board.classList.remove("x");
 
-    if(isCircleTurn) {                                                    //SE IS CIRCLE TURN FOR VERDADEIRO
-        board.classList.add("circle");                                    //ADICIONA A CLASSE CIRCLE NO BOARD
+    if(isCircleTurn) {
+        board.classList.add("circle");
     } else {
-        board.classList.add("x");                                         //ADICIONA A CLASSE X NO BOARD
+        board.classList.add("x");
     }
 }
 
-function checkForWin (currentPlayer) {                                    //CHECKA SE FOI UMA VITÓRIA
-    return winningCombination.some(combination => {                       //FUNÇÃO SOME TESTA SE AO MENOS UM ARRAY PASSA NO TESTE IMPLEMENTADO
-        return combination.every(index => {                               //FUNÇÃO EVERY TESTA SE TODOS ELEMENTOS DO ARRAY PASSAM NO TESTE IMPLEMENTADO
-            return cellElements[index].classList.contains(currentPlayer); //VERIFICA SE CADA CELULA CONTAIN O CURRENTPLAYER (QUE PODE SER A CLASSE X OU CIRCLE)
+function checkForWin (currentPlayer) {
+    return winningCombination.some(combination => {
+        return combination.every(index => {
+            return cellElements[index].classList.contains(currentPlayer);
         })                          
     });
 }
 
-function checkForDraw () {                                                //FUNÇÃO RETORNA VERDADEIRO SE TODAS AS CELULAS ESTIVEREM PREENCHIDAS COM A CLASSE "X" OU "CIRCLE"
-    return [... cellElements].every(cell => {                             //TORNA CELLELEMENTS UM ARRAY, E DEPOIS VERIFICA SE TODAS AS CELULAS ATRAVES DE UMA CONDIÇÃO
+function checkForDraw () {
+    return [... cellElements].every(cell => {
         return cell.classList.contains("x") || cell.classList.contains("circle");
     })
 }
